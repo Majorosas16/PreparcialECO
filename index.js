@@ -4,12 +4,10 @@ const { Server } = require("socket.io");
 const { createServer } = require("http");
 
 const app = express();
-
 const httpServer = createServer(app);
 
 const io = new Server(httpServer, {
-  // westa es una instancia de Socket.io en nuestro servidor
-  path: "/rea-time",
+  path: "/real-time",
   cors: {
     origin: "*",
   },
@@ -17,46 +15,46 @@ const io = new Server(httpServer, {
 
 app.use(express.json());
 app.use("/app1", express.static(path.join(__dirname, "app1")));
-app.use("/app2", express.static(path.join(__dirname, "app2")));
 
 let users = [];
-let roles = ["marco", "polo", "polo-especial"];
+const roles = ["marco", "polo", "polo-especial"];
+let availableRoles = [...roles];
 
 app.get("/users", (req, res) => {
   res.send(users);
 });
 
-app.post("/user-register", (req, res) => {
-
+app.post("/join-game", (req, res) => {
   const { name } = req.body;
 
   if (!name) {
     return res.status(400).json({ message: "Ops, faltan datos" });
   }
 
-  assingRole = () => {
-    let rol = roles[Math.floor(Math.random() * roles.length)];
-    if (users.some((user) => user.rol === rol)){
-      //Que vaya eliminando los elementos del arreglo
-    }
-    return rol;
-   }
+  if (availableRoles.length === 0) {
+    return res.status(400).json({ message: "No hay roles disponibles, solo 3 jugadores" });
+  }
 
-  const user  = {
+  const assignRole = () => {
+    const i = Math.floor(Math.random() * availableRoles.length);
+    return availableRoles.splice(i, 1)[0];
+  };
+
+  const user = {
     id: users.length + 1,
     name,
-    rol: assingRole(),
+    rol: assignRole(),
   };
 
   users.push(user);
 
- 
   console.log("Super el registro:", users);
+  console.log(roles);
 
-  res.json({ message: "Usuario registrado" });
+  res.status(201).json({ message: "Usuario registrado", player: user, 
+  numberOfPlayers: users.length }); 
+
 });
-
-
 
 io.on("connection", (socket) => {
   socket.on("coordenadas", (data) => {
@@ -67,3 +65,4 @@ io.on("connection", (socket) => {
 });
 
 httpServer.listen(5051);
+console.log("Server on: http://localhost:5051");
