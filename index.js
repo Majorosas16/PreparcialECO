@@ -17,7 +17,7 @@ app.use(express.json());
 app.use("/app1", express.static(path.join(__dirname, "app1")));
 
 let users = [];
-const roles = ["marco", "polo", "polo-especial"];
+const roles = ["Marco", "Polo", "Special Polo"];
 let availableRoles = [...roles];
 
 app.get("/users", (req, res) => {
@@ -28,11 +28,11 @@ app.post("/join-game", (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    return res.status(400).json({ message: "Ops, faltan datos" });
+    return res.status(400).json({ message: "Ops, data missing" });
   }
 
   if (availableRoles.length === 0) {
-    return res.status(400).json({ message: "No hay roles disponibles, solo 3 jugadores" });
+    return res.status(400).json({ message: "No more players, There are 3 players now" });
   }
 
   const assignRole = () => {
@@ -49,20 +49,37 @@ app.post("/join-game", (req, res) => {
   users.push(user);
 
   console.log("Super el registro:", users);
-  console.log(roles);
 
   res.status(201).json({ message: "Usuario registrado", player: user, 
   numberOfPlayers: users.length }); 
 
 });
 
-io.on("connection", (socket) => {
-  socket.on("coordenadas", (data) => {
-    console.log(data);
-    io.emit("coordenadas", data);
-  });
-  socket.on("notificar-a-todos", (data) => {});
+app.post("/start-game", (req, res) => {
+
+  const { text} = req.body;
+
+  if (!text) {
+    return res.status(400).json({ message: "Ops, data missing" });
+  }
+
+  console.log(text);
+  
+  res.status(200).json({ message: "Juego iniciado"}); 
+
+  io.emit("startGame"); // Ahora enviamos un objeto con `role`
 });
+
+// io.on("connection", (socket) => {
+//   users.forEach((user) => {
+//     const userEmit = {
+//       name: user.name,
+//       rol: user.rol,
+//     }
+//     io.emit("startGame", userEmit);
+//   });
+// })
+
 
 httpServer.listen(5051);
 console.log("Server on: http://localhost:5051");
