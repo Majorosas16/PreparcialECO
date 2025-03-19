@@ -123,24 +123,28 @@ socket.on("notification", (data) => {
           btnScreamPolo.disabled = false;
           btnScreamPolo.addEventListener("click", notifyPolo);
         }
-      }, 1000); // Espera 100ms antes de buscar el botón
+      }, 100); // Espera 100ms antes de buscar el botón
     }
   }
 
-  setTimeout(() => {
-    const btnScreamMarco = document.getElementById("btnScreamMarco");
-    console.log("btnMarco", btnScreamMarco);
-
-    if (btnScreamMarco) {
-      btnScreamMarco.style.display = "none";
-    }
-  }, 100); // Espera 100ms antes de buscar el botón
-
   if (playerRole === "Marco") {
+    
+    setTimeout(() => {
+      const btnScreamMarco = document.getElementById("btnScreamMarco");
+      console.log("btnMarco", btnScreamMarco);
+  
+      if (btnScreamMarco) {
+        btnScreamMarco.style.display = "none";
+      }
+    }, 100); // Espera 100ms antes de buscar el botón
+
     console.log("esperando cambios en el DOM para Marco"); // Ahora sí lo muestra
 
     if (data.message === "Polo!!!") {
+      wait.style.display="block"
       wait.innerHTML = `<h2>Polo ha gritado: ${data.message}</h2>`;
+      console.log(wait);
+      
 
       // Espera un momento antes de buscar el botón para asegurarte de que ya se creó en el DOM
       setTimeout(() => {
@@ -149,7 +153,7 @@ socket.on("notification", (data) => {
         btnPolo.innerHTML = `Un jugador gritó ${data.message}`;
         start.appendChild(btnPolo);
         console.log("btnPolo", btnPolo);
-      }, 1000); // Espera 100ms antes de buscar el botón
+      }, 100); // Espera 100ms antes de buscar el botón
     }
   }
 });
