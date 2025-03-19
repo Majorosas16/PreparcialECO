@@ -12,6 +12,7 @@ const wait = document.getElementById("wait");
 
 let playerRole = "";
 let idPlayer = 0;
+let username = "";
 
 start.style.display = "none";
 
@@ -28,13 +29,13 @@ function registerUser() {
       alert(data.message);
 
       idPlayer = data.player.id;
-      const name = data.player.name;
+      username = data.player.name;
       playerRole = data.player.rol;
       const players = data.numberOfPlayers;
 
       start.style.display = "block";
 
-      nickname.innerHTML = name;
+      nickname.innerHTML = username;
       role.innerHTML = `Tú eres ${playerRole}`;
 
       nameInput.style.display = "none";
@@ -143,18 +144,25 @@ socket.on("notification", (data) => {
     if (data.message === "Polo!!!") {
       wait.style.display="block"
       wait.innerHTML = `<h2>Polo ha gritado: ${data.message}</h2>`;
-      console.log(wait);
-      
 
-      // Espera un momento antes de buscar el botón para asegurarte de que ya se creó en el DOM
       setTimeout(() => {
         const btnPolo = document.createElement("button");
         btnPolo.id = data.userId;
+        const idBtnPolo =btnPolo.id
         btnPolo.innerHTML = `Un jugador gritó ${data.message}`;
         start.appendChild(btnPolo);
+        btnPolo.addEventListener("click", () => selectPolo(idBtnPolo));
+        console.log("este es el id del boton de polo "+idBtnPolo);//si lo hace
         console.log("btnPolo", btnPolo);
-      }, 100); // Espera 100ms antes de buscar el botón
+      }, 100);
     }
+  }
+
+  if (data.message.includes("Game Over")) {
+    const results = document.createElement("div");
+    const h2 = document.createElement("h2").innerHTML="Game over";
+    const p = document.createElement("p");
+    p.innerHTML= data.message
   }
 });
 
@@ -179,8 +187,17 @@ function notifyPolo() {
     .catch((error) => console.error("Error:", error));
 }
 
-const sendCoordenates = () => {
-  socket.emit("coordenadas", { x: 123, y: 432 });
-};
+function selectPolo(idPoloSelected) {
+  console.log(idPoloSelected); //si lo hace
+  console.log("llegaste a selectPolo"); //si lo hace
 
-// document.getElementById("event-btn").addEventListener("click", sendCoordenates);
+  fetch("http://localhost:5051/select-polo", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ idPlayer, username:username, idPoloSelected }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+    })
+    .catch((error) => console.error("Error:", error));
+}

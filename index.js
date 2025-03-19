@@ -32,7 +32,9 @@ app.post("/join-game", (req, res) => {
   }
 
   if (availableRoles.length === 0) {
-    return res.status(400).json({ message: "No more players, There are 3 players now" });
+    return res
+      .status(400)
+      .json({ message: "No more players, There are 3 players now" });
   }
 
   const assignRole = () => {
@@ -51,10 +53,10 @@ app.post("/join-game", (req, res) => {
   console.log("Super el registro:", users);
 
   res.status(201).json({
-    message: "Usuario registrado", player: user,
-    numberOfPlayers: users.length
+    message: "Usuario registrado",
+    player: user,
+    numberOfPlayers: users.length,
   });
-
 });
 
 app.post("/start-game", (req, res) => {
@@ -78,7 +80,6 @@ app.post("/notify-marco", (req, res) => {
   }
   console.log("Grito recibido de:", idPlayer); //si lo muestra
   res.status(200).json({ message: "Grito publicado", idPlayer: idPlayer }); //si lo muestra
-
 });
 
 app.post("/notify-polo", (req, res) => {
@@ -88,9 +89,28 @@ app.post("/notify-polo", (req, res) => {
     return res.status(400).json({ message: "Ops, data missing" });
   }
   console.log("Grito recibido de:", idPlayer);
-  res.status(200).json({ message: "Grito publicado", idPlayer: idPlayer }); 
-  io.emit("notification", { userId: idPlayer, message: "Polo!!!"});
+  res.status(200).json({ message: "Grito publicado", idPlayer: idPlayer });
+  io.emit("notification", { userId: idPlayer, message: "Polo!!!" });
+});
 
+app.post("/select-polo", (req, res) => {
+  const { idPlayer, username, idPoloSelected } = req.body;
+  const playerChoosen = users.find(player => player.id === idPoloSelected);
+
+  if (!idPlayer || !idPoloSelected || !username ) {
+    return res.status(400).json({ message: "Ops, data missing" });
+  } else if (!playerChoosen) {
+    return res.status(400).json({ message: "Who are u player?" });
+  }
+
+  const specialPoloName = users.find(player => player.rol === "Polo Especial");
+
+  if (playerChoosen.rol === specialPoloName) {
+    io.emit("notification", { userId: idPlayer, message: `Game Over: El marco${username}es el ganador`});
+  } else {
+    io.emit("notification", { userId: idPlayer, message: `Game Over: El marco${username}es el perdedor`}); 
+  }
+  res.status(200).json({ message: "Game Over, check out the results"});
 });
 
 io.on("connection", (socket) => {
@@ -99,7 +119,6 @@ io.on("connection", (socket) => {
     io.emit("notification", { userId: data, message: "Marco!!!" });
   });
 });
-
 
 httpServer.listen(5051);
 console.log("Server on: http://localhost:5051");
