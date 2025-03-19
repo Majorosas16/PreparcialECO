@@ -107,9 +107,9 @@ app.post("/select-polo", (req, res) => {
   }
   
   if (playerChoosen.rol === "Polo Especial") {
-    io.emit("notification", { userId: userId, message: `Game Over: El marco ${username}es el ganador`});
+    io.emit("notification", { userId: userId, message: `Game Over: El marco ${username} es el ganador`});
   } else {
-    io.emit("notification", { userId: userId, message: `Game Over: El marco ${username}es el perdedor`}); 
+    io.emit("notification", { userId: userId, message: `Game Over: El marco ${username} es el perdedor`}); 
   }
   res.status(200).json({ message: "Game Over, check out the results"});
 });

@@ -165,7 +165,8 @@ socket.on("notification", (data) => {
     const h2 = document.createElement("h2")
     h2.innerHTML = "Game over";
     const p = document.createElement("p");
-    p.innerHTML = data.message
+    const messageContent = data.message.split("Game Over: ")[1] || data.message;
+  p.innerHTML = messageContent; 
     results.appendChild(h2)
     results.appendChild(p)
     start.style.display="none"
