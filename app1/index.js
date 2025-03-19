@@ -11,6 +11,7 @@ const role = document.getElementById("role");
 const wait = document.getElementById("wait");
 
 let playerRole = "";
+let idPlayer = 0;
 
 start.style.display = "none";
       
@@ -26,7 +27,7 @@ function registerUser() {
     .then((data) => {
       alert(data.message);
     
-      const id = data.player.id;
+      idPlayer = data.player.id;
       const name = data.player.name;
       playerRole = data.player.rol;
       const players = data.numberOfPlayers;
@@ -70,6 +71,7 @@ function startGame() {
           wait.style.display = "none";
           const btnScreamMarco = document.createElement("button");
           btnScreamMarco.innerHTML = "Gritar MARCO";
+          btnScreamMarco.addEventListener("click", notifyMarco)
           start.appendChild(btnScreamMarco);
         
         } else  { 
@@ -80,7 +82,35 @@ function startGame() {
           start.appendChild(btnScreamPolo);
         }
       });
+
+      function notifyMarco() {
+        console.log("llegaste a notifyMarco");
+        
+              fetch("http://localhost:5051/notify-marco", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ idPlayer }),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                  alert(data.message);
+                  console.log("player de la data:" + data.idPlayer); //aqui si lo muestra bien
+                  socket.emit("notify-marco", data.idPlayer);
+                })
+                .catch((error) => console.error("Error:", error));
+            }
+        
+      socket.on("notification", (data) => {
+        console.log("Marco scream!");
       
+        const marcoId= data.userId
+        if (playerRole === "Polo" && playerRole === "Polo Especial") {  
+          console.log("esperando cambios en el DOOM"); //no lo muestra
+          
+          wait.innerHTML = `<h2>Marco ha gritado: ${data.message}</h2>`;
+          btnScreamPolo.disabled = false;        
+        } 
+      });
       
 const sendCoordenates = () => {
   socket.emit("coordenadas", { x: 123, y: 432 });

@@ -65,21 +65,26 @@ app.post("/start-game", (req, res) => {
   console.log(text);
 
   res.status(200).json({ message: "Juego iniciado" });
-
-  // Emitimos a cada jugador su propio rol
-    io.emit("startGame");
+  io.emit("startGame");
 });
 
+app.post("/notify-marco", (req, res) => {
+  const { idPlayer } = req.body;
 
-// io.on("connection", (socket) => {
-//   users.forEach((user) => {
-//     const userEmit = {
-//       name: user.name,
-//       rol: user.rol,
-//     }
-//     io.emit("startGame", userEmit);
-//   });
-// })
+  if (!idPlayer) {
+    return res.status(400).json({ message: "Falta idPlayer" });
+  }
+  console.log("Grito recibido de:", idPlayer); //si lo muestra
+  res.status(200).json({ message: "Grito publicado", idPlayer: idPlayer}); //si lo muestra
+
+});
+
+io.on("connection", (socket) => {
+  socket.on("notify-marco", (data) => {
+    console.log("Entró a notify-marco!!!!");
+    io.emit("notification", { userId: data.idPlayer, message: "Marco" });
+  });
+});
 
 
 httpServer.listen(5051);
