@@ -97,11 +97,9 @@ app.post("/select-polo", (req, res) => {
   const { userId, username, poloSelected } = req.body;
   console.log("llegaron completicos: "+ userId,username,poloSelected);
   
-  //aqui es el problema
   const playerChoosen = users.find(player => player.id === parseInt(poloSelected));
-  console.log(playerChoosen);
+  console.log(playerChoosen); //good
   
-
   if (!userId || !poloSelected || !username ) {
     return res.status(400).json({ message: "Ops, data missing" });
   } else if (!playerChoosen) {

@@ -4,6 +4,7 @@ const btn = document.getElementById("joinBtn");
 btn.addEventListener("click", registerUser);
 const register = document.getElementById("register");
 const start = document.getElementById("start");
+const results = document.getElementById("results");
 const nameInput = document.getElementById("nameInput");
 
 const nickname = document.getElementById("nickname");
@@ -15,6 +16,7 @@ let idPlayer = 0;
 let username = "";
 
 start.style.display = "none";
+results.style.display = "none";
 
 function registerUser() {
   fetch("http://localhost:5051/join-game", {
@@ -159,10 +161,14 @@ socket.on("notification", (data) => {
   }
 
   if (data.message.includes("Game Over")) {
-    const results = document.createElement("div");
-    const h2 = document.createElement("h2").innerHTML="Game over";
+    results.style.display="block"
+    const h2 = document.createElement("h2")
+    h2.innerHTML = "Game over";
     const p = document.createElement("p");
-    p.innerHTML= data.message
+    p.innerHTML = data.message
+    results.appendChild(h2)
+    results.appendChild(p)
+    start.style.display="none"
   }
 });
 
