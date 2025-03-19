@@ -14,11 +14,15 @@ const wait = document.getElementById("wait");
 let playerRole = "";
 let idPlayer = 0;
 let username = "";
+let poloCounter = 0;
+
 
 start.style.display = "none";
 results.style.display = "none";
 
 function registerUser() {
+  register.style.display = "none"
+  
   fetch("http://localhost:5051/join-game", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -35,7 +39,7 @@ function registerUser() {
       playerRole = data.player.rol;
       const players = data.numberOfPlayers;
 
-      start.style.display = "block";
+      start.style.display = "flex";
 
       nickname.innerHTML = username;
       role.innerHTML = `Tú eres ${playerRole}`;
@@ -84,6 +88,7 @@ socket.on("startGame", () => {
     btnScreamPolo.innerHTML = "Gritar POLO";
     btnScreamPolo.id = "btnScreamPolo";
     btnScreamPolo.disabled = true;
+    
     start.appendChild(btnScreamPolo);
   }
 });
@@ -144,19 +149,20 @@ socket.on("notification", (data) => {
     console.log("esperando cambios en el DOM para Marco"); // Ahora sí lo muestra
 
     if (data.message === "Polo!!!") {
+
       wait.style.display="block"
       wait.innerHTML = `<h2>Polo ha gritado: ${data.message}</h2>`;
 
-      setTimeout(() => {
-        const btnPolo = document.createElement("button");
-        btnPolo.id = data.userId;
-        const idBtnPolo =btnPolo.id
-        btnPolo.innerHTML = `Un jugador gritó ${data.message}`;
-        start.appendChild(btnPolo);
-        btnPolo.addEventListener("click", () => selectPolo(idBtnPolo));
-        console.log("este es el id del boton de polo "+idBtnPolo);//si lo hace
-        console.log("btnPolo", btnPolo);
-      }, 100);
+        setTimeout(() => {
+          const btnPolo = document.createElement("button");
+          btnPolo.id = data.userId;
+          const idBtnPolo =btnPolo.id
+          btnPolo.innerHTML = `Un jugador gritó ${data.message}`;
+          start.appendChild(btnPolo);
+          btnPolo.addEventListener("click", () => selectPolo(idBtnPolo));
+          console.log("este es el id del boton de polo "+idBtnPolo);//si lo hace
+          console.log("btnPolo", btnPolo);
+        }, 100);
     }
   }
 
@@ -185,10 +191,11 @@ function notifyPolo() {
     .then((data) => {
       setTimeout(() => {
         const btnScreamPolo = document.getElementById("btnScreamPolo");
-    
-        if (btnScreamPolo) {
-          btnScreamPolo.style.display = "none";
-        }
+
+          if (btnScreamPolo) {
+            btnScreamPolo.style.display = "none";
+          }
+        
       }, 100); // Espera 100ms antes de buscar el botón
     })
     .catch((error) => console.error("Error:", error));

@@ -9,21 +9,24 @@
 </head>
 
 <body>
-    <h1>Marco Polo Game</h1>
-
-    <div id="register">
-        <input type="text" id="nameInput" placeholder="Nombre">
-        <button id="joinBtn">JOIN GAME</button>
-    </div>
-
-    <div id="start">
-        <h3 id="nickname"></h3>
-        <p id="role"></p>
-        <p id="wait">Esperando a que se unan más jugadores...</p>
-    </div>
-
-    <div id="results"></div>
+    <h1 class="title">Marco Polo Game</h1>
+    <div class="container">
+        <div id="register">
+            <h2 class="hi">Hi player!</h2>
+            <p>Write down your name to join</p>
+            <input type="text" id="nameInput" placeholder="nickname">
+            <button id="joinBtn">JOIN GAME</button>
+        </div>
     
+        <div id="start">
+            <h3 id="nickname"></h3>
+            <p id="role"></p>
+            <p id="wait">Esperando a que se unan más jugadores...</p>
+        </div>
+    
+        <div id="results"></div>
+    </div>
+
     <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
     <script src="/app1/index.js"></script>
 </body>
