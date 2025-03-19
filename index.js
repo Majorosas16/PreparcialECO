@@ -50,8 +50,10 @@ app.post("/join-game", (req, res) => {
 
   console.log("Super el registro:", users);
 
-  res.status(201).json({ message: "Usuario registrado", player: user, 
-  numberOfPlayers: users.length }); 
+  res.status(201).json({
+    message: "Usuario registrado", player: user,
+    numberOfPlayers: users.length
+  });
 
 });
 
@@ -75,7 +77,7 @@ app.post("/notify-marco", (req, res) => {
     return res.status(400).json({ message: "Falta idPlayer" });
   }
   console.log("Grito recibido de:", idPlayer); //si lo muestra
-  res.status(200).json({ message: "Grito publicado", idPlayer: idPlayer}); //si lo muestra
+  res.status(200).json({ message: "Grito publicado", idPlayer: idPlayer }); //si lo muestra
 
 });
 
