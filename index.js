@@ -74,10 +74,22 @@ app.post("/notify-marco", (req, res) => {
   const { idPlayer } = req.body;
 
   if (!idPlayer) {
-    return res.status(400).json({ message: "Falta idPlayer" });
+    return res.status(400).json({ message: "Ops, data missing" });
   }
   console.log("Grito recibido de:", idPlayer); //si lo muestra
   res.status(200).json({ message: "Grito publicado", idPlayer: idPlayer }); //si lo muestra
+
+});
+
+app.post("/notify-polo", (req, res) => {
+  const { idPlayer } = req.body;
+
+  if (!idPlayer) {
+    return res.status(400).json({ message: "Ops, data missing" });
+  }
+  console.log("Grito recibido de:", idPlayer);
+  res.status(200).json({ message: "Grito publicado", idPlayer: idPlayer }); 
+  io.emit("notification", { userId: idPlayer, message: "Polo!!!"});
 
 });
 
