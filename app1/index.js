@@ -78,6 +78,7 @@ function startGame() {
           wait.innerHTML = "Espera a que Marco grite";
           const btnScreamPolo = document.createElement("button");
           btnScreamPolo.innerHTML = "Gritar POLO";
+          btnScreamPolo.id="btnScreamPolo"
           btnScreamPolo.disabled = true;
           start.appendChild(btnScreamPolo);
         }
@@ -100,17 +101,26 @@ function startGame() {
                 .catch((error) => console.error("Error:", error));
             }
         
-      socket.on("notification", (data) => {
-        console.log("Marco scream!");
-      
-        const marcoId= data.userId
-        if (playerRole === "Polo" && playerRole === "Polo Especial") {  
-          console.log("esperando cambios en el DOOM"); //no lo muestra
-          
-          wait.innerHTML = `<h2>Marco ha gritado: ${data.message}</h2>`;
-          btnScreamPolo.disabled = false;        
-        } 
-      });
+            socket.on("notification", (data) => {
+              console.log("Marco scream!");
+              console.log(data.message); // bien
+              console.log(data.userId); // bien
+            
+              if (playerRole === "Polo" || playerRole === "Polo Especial") {  
+                console.log("esperando cambios en el DOM"); // Ahora sí lo muestra
+                
+                wait.innerHTML = `<h2>Marco ha gritado: ${data.message}</h2>`;
+            
+                // Espera un momento antes de buscar el botón para asegurarte de que ya se creó en el DOM
+                setTimeout(() => {
+                  const btnScreamPolo = document.getElementById("btnScreamPolo");
+                  if (btnScreamPolo) {
+                    btnScreamPolo.disabled = false;  
+                  }
+                }, 100); // Espera 100ms antes de buscar el botón
+              }
+            });
+            
       
 const sendCoordenates = () => {
   socket.emit("coordenadas", { x: 123, y: 432 });

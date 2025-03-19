@@ -82,7 +82,7 @@ app.post("/notify-marco", (req, res) => {
 io.on("connection", (socket) => {
   socket.on("notify-marco", (data) => {
     console.log("Entró a notify-marco!!!!");
-    io.emit("notification", { userId: data.idPlayer, message: "Marco" });
+    io.emit("notification", { userId: data, message: "Marco!!!" });
   });
 });
 
