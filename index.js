@@ -94,21 +94,24 @@ app.post("/notify-polo", (req, res) => {
 });
 
 app.post("/select-polo", (req, res) => {
-  const { idPlayer, username, idPoloSelected } = req.body;
-  const playerChoosen = users.find(player => player.id === idPoloSelected);
+  const { userId, username, poloSelected } = req.body;
+  console.log("llegaron completicos: "+ userId,username,poloSelected);
+  
+  //aqui es el problema
+  const playerChoosen = users.find(player => player.id === parseInt(poloSelected));
+  console.log(playerChoosen);
+  
 
-  if (!idPlayer || !idPoloSelected || !username ) {
+  if (!userId || !poloSelected || !username ) {
     return res.status(400).json({ message: "Ops, data missing" });
   } else if (!playerChoosen) {
     return res.status(400).json({ message: "Who are u player?" });
   }
-
-  const specialPoloName = users.find(player => player.rol === "Polo Especial");
-
-  if (playerChoosen.rol === specialPoloName) {
-    io.emit("notification", { userId: idPlayer, message: `Game Over: El marco${username}es el ganador`});
+  
+  if (playerChoosen.rol === "Polo Especial") {
+    io.emit("notification", { userId: userId, message: `Game Over: El marco ${username}es el ganador`});
   } else {
-    io.emit("notification", { userId: idPlayer, message: `Game Over: El marco${username}es el perdedor`}); 
+    io.emit("notification", { userId: userId, message: `Game Over: El marco ${username}es el perdedor`}); 
   }
   res.status(200).json({ message: "Game Over, check out the results"});
 });

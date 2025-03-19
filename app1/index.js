@@ -194,10 +194,16 @@ function selectPolo(idPoloSelected) {
   fetch("http://localhost:5051/select-polo", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ idPlayer, username:username, idPoloSelected }),
+    body: JSON.stringify(
+      {
+        userId: idPlayer,
+        username: username,
+        poloSelected: idPoloSelected
+      }),
   })
     .then((response) => response.json())
     .then((data) => {
+      alert(data.message);
     })
     .catch((error) => console.error("Error:", error));
 }
