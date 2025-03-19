@@ -128,7 +128,7 @@ socket.on("notification", (data) => {
   }
 
   if (playerRole === "Marco") {
-    
+
     setTimeout(() => {
       const btnScreamMarco = document.getElementById("btnScreamMarco");
       console.log("btnMarco", btnScreamMarco);
@@ -168,7 +168,13 @@ function notifyPolo() {
   })
     .then((response) => response.json())
     .then((data) => {
-      alert(data.message);
+      setTimeout(() => {
+        const btnScreamPolo = document.getElementById("btnScreamPolo");
+    
+        if (btnScreamPolo) {
+          btnScreamPolo.style.display = "none";
+        }
+      }, 100); // Espera 100ms antes de buscar el botón
     })
     .catch((error) => console.error("Error:", error));
 }
