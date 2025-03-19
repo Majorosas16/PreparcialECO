@@ -16,13 +16,12 @@ let idPlayer = 0;
 let username = "";
 let poloCounter = 0;
 
-
 start.style.display = "none";
 results.style.display = "none";
 
 function registerUser() {
-  register.style.display = "none"
-  
+  register.style.display = "none";
+
   fetch("http://localhost:5051/join-game", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -73,6 +72,8 @@ function startGame() {
 
 socket.on("startGame", () => {
   console.log("Socket on running. Player role:", playerRole);
+  const icon = document.getElementById("icon");
+  icon.style.display = "none";
 
   if (playerRole === "Marco") {
     wait.style.display = "none";
@@ -83,12 +84,12 @@ socket.on("startGame", () => {
     start.appendChild(btnScreamMarco);
     console.log("Botón Marco creado:", btnScreamMarco); // si muestra que el btn se creó en el DOOM
   } else {
-    wait.innerHTML = "Espera a que Marco grite";
+    wait.innerHTML = "Espera a que Marco grite...";
     const btnScreamPolo = document.createElement("button");
     btnScreamPolo.innerHTML = "Gritar POLO";
     btnScreamPolo.id = "btnScreamPolo";
     btnScreamPolo.disabled = true;
-    
+
     start.appendChild(btnScreamPolo);
   }
 });
@@ -136,11 +137,10 @@ socket.on("notification", (data) => {
   }
 
   if (playerRole === "Marco") {
-
     setTimeout(() => {
       const btnScreamMarco = document.getElementById("btnScreamMarco");
       console.log("btnMarco", btnScreamMarco);
-  
+
       if (btnScreamMarco) {
         btnScreamMarco.style.display = "none";
       }
@@ -149,33 +149,34 @@ socket.on("notification", (data) => {
     console.log("esperando cambios en el DOM para Marco"); // Ahora sí lo muestra
 
     if (data.message === "Polo!!!") {
-
-      wait.style.display="block"
+      wait.style.display = "block";
       wait.innerHTML = `<h2>Polo ha gritado: ${data.message}</h2>`;
 
-        setTimeout(() => {
-          const btnPolo = document.createElement("button");
-          btnPolo.id = data.userId;
-          const idBtnPolo =btnPolo.id
-          btnPolo.innerHTML = `Un jugador gritó ${data.message}`;
-          start.appendChild(btnPolo);
-          btnPolo.addEventListener("click", () => selectPolo(idBtnPolo));
-          console.log("este es el id del boton de polo "+idBtnPolo);//si lo hace
-          console.log("btnPolo", btnPolo);
-        }, 100);
+      setTimeout(() => {
+        const btnPolo = document.createElement("button");
+        btnPolo.id = data.userId;
+        btnPolo.classList.add("btnPolo");
+        const idBtnPolo = btnPolo.id;
+        btnPolo.innerHTML = `Un jugador gritó ${data.message}`;
+        start.appendChild(btnPolo);
+        btnPolo.addEventListener("click", () => selectPolo(idBtnPolo));
+        console.log("este es el id del boton de polo " + idBtnPolo); //si lo hace
+        console.log("btnPolo", btnPolo);
+      }, 100);
     }
   }
 
+  //Game Over
   if (data.message.includes("Game Over")) {
-    results.style.display="block"
-    const h2 = document.createElement("h2")
-    h2.innerHTML = "Game over";
-    const p = document.createElement("p");
+    results.style.display = "flex";
+    const h1 = document.createElement("h1");
+    h1.innerHTML = "Game over";
+    const h3 = document.createElement("h3");
     const messageContent = data.message.split("Game Over: ")[1] || data.message;
-  p.innerHTML = messageContent; 
-    results.appendChild(h2)
-    results.appendChild(p)
-    start.style.display="none"
+    h3.innerHTML = messageContent;
+    results.appendChild(h1);
+    results.appendChild(h3);
+    start.style.display = "none";
   }
 });
 
@@ -192,10 +193,9 @@ function notifyPolo() {
       setTimeout(() => {
         const btnScreamPolo = document.getElementById("btnScreamPolo");
 
-          if (btnScreamPolo) {
-            btnScreamPolo.style.display = "none";
-          }
-        
+        if (btnScreamPolo) {
+          btnScreamPolo.style.display = "none";
+        }
       }, 100); // Espera 100ms antes de buscar el botón
     })
     .catch((error) => console.error("Error:", error));
@@ -208,12 +208,11 @@ function selectPolo(idPoloSelected) {
   fetch("http://localhost:5051/select-polo", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(
-      {
-        userId: idPlayer,
-        username: username,
-        poloSelected: idPoloSelected
-      }),
+    body: JSON.stringify({
+      userId: idPlayer,
+      username: username,
+      poloSelected: idPoloSelected,
+    }),
   })
     .then((response) => response.json())
     .then((data) => {

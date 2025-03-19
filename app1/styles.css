@@ -59,23 +59,39 @@ input{
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Sombra ligera */
 }
 
-#joinBtn{
+#joinBtn, #btnScreamMarco, #btnScreamPolo, .btnPolo{
     padding: 20px 20px 20px 20px ;
     font-weight: bolder;
-    background-color: rgb(242, 112, 20);
-    color: white;
+    background-color: rgb(255, 238, 127);
+    color: rgb(53, 53, 53);
     border: none;
     border-radius: 10px;
 }
 
-#start{
+#btnScreamPolo:disabled {
+    background-color: gray;
+    color: white;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+#start, #results{
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    gap: 20%; 
+    gap: 20px; 
 }
 
 #role{
-    color: aquamarine;
+    color: rgb(255, 238, 127);
+    font-size: 25px;
+}
+
+#nickname{
+    font-size: 35px;
+}
+
+#icon{
+    margin-top: 20px;
 }
