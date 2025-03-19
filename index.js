@@ -17,7 +17,7 @@ app.use(express.json());
 app.use("/app1", express.static(path.join(__dirname, "app1")));
 
 let users = [];
-const roles = ["Marco", "Polo", "Special Polo"];
+const roles = ["Marco", "Polo", "Polo Especial"];
 let availableRoles = [...roles];
 
 app.get("/users", (req, res) => {
@@ -56,19 +56,20 @@ app.post("/join-game", (req, res) => {
 });
 
 app.post("/start-game", (req, res) => {
-
-  const { text} = req.body;
+  const { text } = req.body;
 
   if (!text) {
     return res.status(400).json({ message: "Ops, data missing" });
   }
 
   console.log(text);
-  
-  res.status(200).json({ message: "Juego iniciado"}); 
 
-  io.emit("startGame"); // Ahora enviamos un objeto con `role`
+  res.status(200).json({ message: "Juego iniciado" });
+
+  // Emitimos a cada jugador su propio rol
+    io.emit("startGame");
 });
+
 
 // io.on("connection", (socket) => {
 //   users.forEach((user) => {
