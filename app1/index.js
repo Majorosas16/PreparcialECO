@@ -19,6 +19,7 @@ let poloCounter = 0;
 start.style.display = "none";
 results.style.display = "none";
 
+// users register http method
 function registerUser() {
   register.style.display = "none";
 
@@ -40,6 +41,7 @@ function registerUser() {
 
       start.style.display = "flex";
 
+      //appears in Marco and Polo screens
       nickname.innerHTML = username;
       role.innerHTML = `Tú eres ${playerRole}`;
 
@@ -53,6 +55,7 @@ function registerUser() {
     .catch((error) => console.error("Error:", error));
 }
 
+// Just notify to server that the game starts
 function startGame() {
   console.log("llegaste a StartGame!");
 
@@ -70,6 +73,7 @@ function startGame() {
     .catch((error) => console.error("Error:", error));
 }
 
+//For create the game screen
 socket.on("startGame", () => {
   console.log("Socket on running. Player role:", playerRole);
   const icon = document.getElementById("icon");
@@ -94,6 +98,7 @@ socket.on("startGame", () => {
   }
 });
 
+//My bad: I read emit and not POST in the flow
 function notifyMarco() {
   console.log("llegaste a notifyMarco");
 
@@ -111,10 +116,13 @@ function notifyMarco() {
     .catch((error) => console.error("Error:", error));
 }
 
+//Basically, all the emits that the server brings
 socket.on("notification", (data) => {
   console.log("Marco scream!");
   console.log(data.message); // bien
   console.log(data.userId); // bien
+
+  //Polo's Logic
 
   if (playerRole === "Polo" || playerRole === "Polo Especial") {
     console.log("esperando cambios en el DOM para Polo"); // Ahora sí lo muestra
@@ -122,7 +130,7 @@ socket.on("notification", (data) => {
     if (data.message === "Marco!!!") {
       wait.innerHTML = `<h2>Marco ha gritado: ${data.message}</h2>`;
 
-      // Espera un momento antes de buscar el botón para asegurarte de que ya se creó en el DOM
+      // Wait for the button has been created
       setTimeout(() => {
         const btnScreamPolo = document.getElementById("btnScreamPolo");
 
@@ -135,6 +143,8 @@ socket.on("notification", (data) => {
       }, 100); // Espera 100ms antes de buscar el botón
     }
   }
+
+  //Marco's Logic
 
   if (playerRole === "Marco") {
     setTimeout(() => {
@@ -180,6 +190,7 @@ socket.on("notification", (data) => {
   }
 });
 
+//function for btn Polo Scream
 function notifyPolo() {
   console.log("llegaste a notifyPolo");
 
@@ -196,11 +207,12 @@ function notifyPolo() {
         if (btnScreamPolo) {
           btnScreamPolo.style.display = "none";
         }
-      }, 100); // Espera 100ms antes de buscar el botón
+      }, 100);
     })
     .catch((error) => console.error("Error:", error));
 }
 
+// function selectPolo
 function selectPolo(idPoloSelected) {
   console.log(idPoloSelected); //si lo hace
   console.log("llegaste a selectPolo"); //si lo hace
