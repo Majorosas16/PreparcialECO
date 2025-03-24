@@ -1,14 +1,1 @@
-function removePlayer(idPlayer) {
-  console.log("Eliminando jugador:", idPlayer);
-
-  fetch(`http://localhost:5051/remove-player/${idPlayer}`, {
-    method: "DELETE",
-    headers: { "Content-Type": "application/json" }
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      alert(data.message);
-      console.log("Jugador eliminado:", data);
-    })
-    .catch((error) => console.error("Error:", error));
-}
+![Captura de pantalla 2025-03-24 a la(s) 15 57 37](https://github.com/user-attachments/assets/24968c7a-0be9-4d22-ad45-df362c38f793)
