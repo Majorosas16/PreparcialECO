@@ -1,3 +1,5 @@
+Set-ExecutionPolicy -Scope CurrentUser unrestricted
+
 SERVER PRACTICE: https://github.com/Majorosas16/ExpressPractice/tree/main
 
 LAB 04: https://github.com/Majorosas16/Lab04ECO
