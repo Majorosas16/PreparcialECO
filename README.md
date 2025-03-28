@@ -1,4 +1,11 @@
 SERVER PRACTICE: https://github.com/Majorosas16/ExpressPractice/tree/main
+LAB 04: https://github.com/Majorosas16/Lab04ECO
+
+LAB 04 NIKO: https://github.com/NikSala10/LAB4ECO
+PREPARCIAL NKO: https://github.com/NikSala10/PreparcialECO
+
+GUIA CSS: https://github.com/SilvanaCuartasS/RepasoParcial2
+
 
 Metodo DELETE en el cliente
 ![Captura de pantalla 2025-03-24 a la(s) 15 57 37](https://github.com/user-attachments/assets/24968c7a-0be9-4d22-ad45-df362c38f793)
